@@ -18,6 +18,10 @@ namespace OldSchoolScaler
 
         ClientForm rsForm;
 
+        int mouseXOffset = 0;
+        int mouseYOffset = 0;
+        int mouseClickAmount = 1;
+
         [StructLayout(LayoutKind.Sequential)]
         public struct POINT
         {
@@ -177,26 +181,86 @@ namespace OldSchoolScaler
             float mouseScaledX = ((float)me.X / (float)blowUpPictureBox.Width) * rsForm.clientBrowser.Width;
             float mouseScaledY = ((float)me.Y / (float)blowUpPictureBox.Height) * rsForm.clientBrowser.Height;
 
-            IntPtr lParam = (IntPtr)(((int)(rsForm.Top + mouseScaledY + 31) << 16) | (int)(rsForm.Left + mouseScaledX + 10));
+            IntPtr lParam = (IntPtr)(((int)(rsForm.Top + mouseScaledY + 31 + mouseYOffset) << 16) | (int)(rsForm.Left + mouseScaledX + 10 + mouseXOffset));
 
             const int MK_LBUTTON = 0x0001;
 
             if (me.Button == MouseButtons.Right)
             {
                 PostMessage(childWindows[childWindows.Count - 1], WM_MOUSEMOVE, (IntPtr)MK_LBUTTON, lParam);
-                PostMessage(childWindows[childWindows.Count - 1], WM_RBUTTONDOWN, (IntPtr)MK_LBUTTON, lParam);
-                PostMessage(childWindows[childWindows.Count - 1], WM_RBUTTONDOWN, (IntPtr)MK_LBUTTON, lParam);
+                for (int click = 0; click < mouseClickAmount; ++click)
+                {
+                    PostMessage(childWindows[childWindows.Count - 1], WM_RBUTTONDOWN, (IntPtr)MK_LBUTTON, lParam);
+                }
                 PostMessage(childWindows[childWindows.Count - 1], WM_RBUTTONUP, IntPtr.Zero, lParam);
             }
 
             if (me.Button == MouseButtons.Left)
             {
                 PostMessage(childWindows[childWindows.Count - 1], WM_MOUSEMOVE, (IntPtr)MK_LBUTTON, lParam);
-                PostMessage(childWindows[childWindows.Count - 1], WM_LBUTTONDOWN, (IntPtr)MK_LBUTTON, lParam);
-                PostMessage(childWindows[childWindows.Count - 1], WM_LBUTTONDOWN, (IntPtr)MK_LBUTTON, lParam);
+                for (int click = 0; click < mouseClickAmount; ++click)
+                {
+                    PostMessage(childWindows[childWindows.Count - 1], WM_LBUTTONDOWN, (IntPtr)MK_LBUTTON, lParam);
+                }
                 PostMessage(childWindows[childWindows.Count - 1], WM_LBUTTONUP, IntPtr.Zero, lParam);
             }
 
+        }
+
+
+        private void blowUpMouseMove(object sender, MouseEventArgs e)
+        {
+            //MouseEventArgs me = e as MouseEventArgs;
+
+            List<IntPtr> childWindows = GetChildWindows(rsForm.Handle);
+
+            //IntPtr lParam = (IntPtr)((826 << 16) | 1171); //Hard Coded to mute RS
+
+            float scaleRatioX = (float)blowUpPictureBox.Width / (float)rsForm.clientBrowser.Width;
+            float scaleRatioY = (float)blowUpPictureBox.Height / (float)rsForm.clientBrowser.Height;
+
+            float mouseScaledX = ((float)e.X / (float)blowUpPictureBox.Width) * rsForm.clientBrowser.Width;
+            float mouseScaledY = ((float)e.Y / (float)blowUpPictureBox.Height) * rsForm.clientBrowser.Height;
+
+            IntPtr lParam = (IntPtr)(((int)(rsForm.Top + mouseScaledY + 31 + mouseYOffset) << 16) | (int)(rsForm.Left + mouseScaledX + 10 + mouseXOffset));
+
+            const int MK_LBUTTON = 0x0001;
+
+            PostMessage(childWindows[childWindows.Count - 1], WM_MOUSEMOVE, (IntPtr)MK_LBUTTON, lParam);
+        }
+
+        private void calibrateVoidLensesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            voidLensesPanel.Visible = !voidLensesPanel.Visible;
+            if (voidLensesPanel.Visible)
+            {
+                offsetXTrackBar.Value = mouseXOffset;
+                offsetYTrackBar.Value = mouseYOffset;
+                mouseClicksTrackBar.Value = mouseClickAmount;
+
+                labelXOffset.Text = mouseXOffset.ToString();
+                labelYOffset.Text = mouseYOffset.ToString();
+                labelClickAmount.Text = mouseClickAmount.ToString();
+
+            }
+        }
+
+        private void offsetXTrackBar_Scroll(object sender, EventArgs e)
+        {
+            labelXOffset.Text = offsetXTrackBar.Value.ToString();
+            mouseXOffset = offsetXTrackBar.Value;
+        }
+
+        private void offsetYTrackBar_Scroll(object sender, EventArgs e)
+        {
+            labelYOffset.Text = offsetYTrackBar.Value.ToString();
+            mouseYOffset = offsetYTrackBar.Value;
+        }
+
+        private void mouseClicksTrackBar_Scroll(object sender, EventArgs e)
+        {
+            labelClickAmount.Text = mouseClicksTrackBar.Value.ToString();
+            mouseClickAmount = mouseClicksTrackBar.Value;
         }
     }
 
