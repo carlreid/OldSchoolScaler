@@ -18,6 +18,8 @@ namespace OldSchoolScaler
 
         public Form myOwner;
 
+        public bool returnFocus = false;
+
         public delegate bool EnumWindowProc(IntPtr hWnd, IntPtr parameter);
 
         [DllImport("user32")]
@@ -64,13 +66,20 @@ namespace OldSchoolScaler
 
         private void gotFocus(object sender, EventArgs e)
         {
-            //myOwner.Focus();
+            if (returnFocus)
+            {
+                myOwner.Focus();
+            }
         }
 
         private void ClientForm_Load(object sender, EventArgs e)
         {
-            this.Left = 0;
+            this.Left = 9000;
             this.Top = 9000;
+            //this.ClientSize = new Size(0,0);
+
+            clientBrowser.Navigate("http://oldschool.runescape.com/", null, null, "Old School Scaler\r\n");
+
         }
 
         private void gettingClosed(object sender, FormClosingEventArgs e)

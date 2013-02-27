@@ -40,7 +40,7 @@
             this.clientBrowser.ScrollBarsEnabled = false;
             this.clientBrowser.Size = new System.Drawing.Size(785, 535);
             this.clientBrowser.TabIndex = 3;
-            this.clientBrowser.Url = new System.Uri("http://oldschool58.runescape.com/", System.UriKind.Absolute);
+            this.clientBrowser.Url = new System.Uri("", System.UriKind.Relative);
             // 
             // ClientForm
             // 

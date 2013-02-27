@@ -21,6 +21,11 @@ namespace OldSchoolScaler
         int mouseXOffset = 0;
         int mouseYOffset = 0;
         int mouseClickAmount = 1;
+        bool isStretched = false;
+        float rsRatio = 1.53f;
+
+        int lastMousePosX = 0;
+        int lastMousePosY = 0;
 
         [StructLayout(LayoutKind.Sequential)]
         public struct POINT
@@ -109,17 +114,33 @@ namespace OldSchoolScaler
             rsForm = new ClientForm();
             rsForm.myOwner = this;
             rsForm.Show();
-
-
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
+            //rsForm.clientBrowser.Invalidate();
             if (blowUpPictureBox.Image != null)
             {
                 blowUpPictureBox.Image.Dispose();
             }
             blowUpPictureBox.Image = ControlExtensions.DrawToImage(rsForm.clientBrowser);
+
+
+
+            //if (inRightClickDown)
+            //{
+            //    return;
+            //}
+            //List<IntPtr> childWindows = GetChildWindows(rsForm.Handle);
+
+            //float scaleRatioX = (float)blowUpPictureBox.Width / (float)rsForm.clientBrowser.Width;
+            //float scaleRatioY = (float)blowUpPictureBox.Height / (float)rsForm.clientBrowser.Height;
+
+            //IntPtr lParam = (IntPtr)(((int)(rsForm.Top + lastMousePosY + 31 + mouseYOffset) << 16) | (int)(rsForm.Left + lastMousePosX + 10 + mouseXOffset));
+
+            //PostMessage(childWindows[childWindows.Count - 1], WM_MOUSEMOVE, IntPtr.Zero, lParam);
+
+
         }
 
         public static List<IntPtr> GetChildWindows(IntPtr parent)
@@ -169,52 +190,58 @@ namespace OldSchoolScaler
 
         private void gotCLicked(object sender, EventArgs e)
         {
-            MouseEventArgs me = e as MouseEventArgs;
+            //MouseEventArgs me = e as MouseEventArgs;
 
-            List<IntPtr> childWindows = GetChildWindows(rsForm.Handle);
+            //List<IntPtr> childWindows = GetChildWindows(rsForm.Handle);
 
-            //IntPtr lParam = (IntPtr)((826 << 16) | 1171); //Hard Coded to mute RS
+            ////IntPtr lParam = (IntPtr)((826 << 16) | 1171); //Hard Coded to mute RS
 
-            float scaleRatioX = (float)blowUpPictureBox.Width / (float)rsForm.clientBrowser.Width;
-            float scaleRatioY = (float)blowUpPictureBox.Height / (float)rsForm.clientBrowser.Height;
+            //float scaleRatioX = (float)blowUpPictureBox.Width / (float)rsForm.clientBrowser.Width;
+            //float scaleRatioY = (float)blowUpPictureBox.Height / (float)rsForm.clientBrowser.Height;
 
-            float mouseScaledX = ((float)me.X / (float)blowUpPictureBox.Width) * rsForm.clientBrowser.Width;
-            float mouseScaledY = ((float)me.Y / (float)blowUpPictureBox.Height) * rsForm.clientBrowser.Height;
+            //float mouseScaledX = ((float)me.X / (float)blowUpPictureBox.Width) * rsForm.clientBrowser.Width;
+            //float mouseScaledY = ((float)me.Y / (float)blowUpPictureBox.Height) * rsForm.clientBrowser.Height;
 
-            IntPtr lParam = (IntPtr)(((int)(rsForm.Top + mouseScaledY + 31 + mouseYOffset) << 16) | (int)(rsForm.Left + mouseScaledX + 10 + mouseXOffset));
+            //IntPtr lParam = (IntPtr)(((int)(rsForm.Top + mouseScaledY + 31 + mouseYOffset) << 16) | (int)(rsForm.Left + mouseScaledX + 10 + mouseXOffset));
 
-            const int MK_LBUTTON = 0x0001;
+            //const int MK_LBUTTON = 0x0001;
+            //const int MK_RBUTTON = 0x0002;
 
-            if (me.Button == MouseButtons.Right)
-            {
-                PostMessage(childWindows[childWindows.Count - 1], WM_MOUSEMOVE, (IntPtr)MK_LBUTTON, lParam);
-                for (int click = 0; click < mouseClickAmount; ++click)
-                {
-                    PostMessage(childWindows[childWindows.Count - 1], WM_RBUTTONDOWN, (IntPtr)MK_LBUTTON, lParam);
-                }
-                PostMessage(childWindows[childWindows.Count - 1], WM_RBUTTONUP, IntPtr.Zero, lParam);
-            }
+            //if (me.Button == MouseButtons.Right)
+            //{
+            //    //PostMessage(childWindows[childWindows.Count - 1], WM_MOUSEMOVE, (IntPtr)MK_LBUTTON, lParam);
+            //    for (int click = 0; click < mouseClickAmount; ++click)
+            //    {
+            //        PostMessage(childWindows[childWindows.Count - 1], WM_RBUTTONDOWN, (IntPtr)MK_RBUTTON, lParam);
+            //        PostMessage(childWindows[childWindows.Count - 1], WM_RBUTTONUP, IntPtr.Zero, lParam);
+            //    }
+                
+            //}
 
-            if (me.Button == MouseButtons.Left)
-            {
-                PostMessage(childWindows[childWindows.Count - 1], WM_MOUSEMOVE, (IntPtr)MK_LBUTTON, lParam);
-                for (int click = 0; click < mouseClickAmount; ++click)
-                {
-                    PostMessage(childWindows[childWindows.Count - 1], WM_LBUTTONDOWN, (IntPtr)MK_LBUTTON, lParam);
-                }
-                PostMessage(childWindows[childWindows.Count - 1], WM_LBUTTONUP, IntPtr.Zero, lParam);
-            }
+            //if (me.Button == MouseButtons.Left)
+            //{
+            //    //PostMessage(childWindows[childWindows.Count - 1], WM_MOUSEMOVE, (IntPtr)MK_LBUTTON, lParam);
+            //    for (int click = 0; click < mouseClickAmount; ++click)
+            //    {
+            //        PostMessage(childWindows[childWindows.Count - 1], WM_LBUTTONDOWN, (IntPtr)MK_LBUTTON, lParam);
+            //        PostMessage(childWindows[childWindows.Count - 1], WM_LBUTTONUP, IntPtr.Zero, lParam);
+            //    }
+                
+            //}
 
         }
 
 
         private void blowUpMouseMove(object sender, MouseEventArgs e)
         {
-            //MouseEventArgs me = e as MouseEventArgs;
+
+            if (e.Button == MouseButtons.Right)
+            {
+                Control control = (Control)sender;
+                control.Capture = false;
+            }
 
             List<IntPtr> childWindows = GetChildWindows(rsForm.Handle);
-
-            //IntPtr lParam = (IntPtr)((826 << 16) | 1171); //Hard Coded to mute RS
 
             float scaleRatioX = (float)blowUpPictureBox.Width / (float)rsForm.clientBrowser.Width;
             float scaleRatioY = (float)blowUpPictureBox.Height / (float)rsForm.clientBrowser.Height;
@@ -224,9 +251,11 @@ namespace OldSchoolScaler
 
             IntPtr lParam = (IntPtr)(((int)(rsForm.Top + mouseScaledY + 31 + mouseYOffset) << 16) | (int)(rsForm.Left + mouseScaledX + 10 + mouseXOffset));
 
-            const int MK_LBUTTON = 0x0001;
+            PostMessage(childWindows[childWindows.Count - 1], WM_MOUSEMOVE, IntPtr.Zero, lParam);
 
-            PostMessage(childWindows[childWindows.Count - 1], WM_MOUSEMOVE, (IntPtr)MK_LBUTTON, lParam);
+            lastMousePosX = (int)mouseScaledX;
+            lastMousePosY = (int)mouseScaledY;
+
         }
 
         private void calibrateVoidLensesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -261,6 +290,107 @@ namespace OldSchoolScaler
         {
             labelClickAmount.Text = mouseClicksTrackBar.Value.ToString();
             mouseClickAmount = mouseClicksTrackBar.Value;
+        }
+
+        private void toggleStretchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            isStretched = !isStretched;
+
+            if (isStretched)
+            {
+                blowUpPictureBox.Left = this.ClientRectangle.Left;
+                blowUpPictureBox.Top = menuConfig.Bottom;
+                blowUpPictureBox.Width = this.ClientRectangle.Width;
+                blowUpPictureBox.Height = this.ClientRectangle.Height - menuConfig.Bottom;
+            }
+            else
+            {
+                blowUpPictureBox.Top = menuConfig.Bottom;
+                blowUpPictureBox.Height = this.ClientRectangle.Height - menuConfig.Bottom;
+
+                int calcWidth = (int)(blowUpPictureBox.Height * rsRatio);
+                blowUpPictureBox.Left = (this.Width / 2) - (calcWidth / 2);
+                blowUpPictureBox.Width = calcWidth;
+            }
+        }
+
+        private void returnFocusToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            rsForm.returnFocus = !rsForm.returnFocus;
+        }
+
+        private void blowUpMouseDown(object sender, MouseEventArgs e)
+        {
+            Debug.WriteLine("Mouse Down");
+            List<IntPtr> childWindows = GetChildWindows(rsForm.Handle);
+
+            float scaleRatioX = (float)blowUpPictureBox.Width / (float)rsForm.clientBrowser.Width;
+            float scaleRatioY = (float)blowUpPictureBox.Height / (float)rsForm.clientBrowser.Height;
+
+            float mouseScaledX = ((float)e.X / (float)blowUpPictureBox.Width) * rsForm.clientBrowser.Width;
+            float mouseScaledY = ((float)e.Y / (float)blowUpPictureBox.Height) * rsForm.clientBrowser.Height;
+
+            IntPtr lParam = (IntPtr)(((int)(rsForm.Top + mouseScaledY + 31 + mouseYOffset) << 16) | (int)(rsForm.Left + mouseScaledX + 10 + mouseXOffset));
+
+            const int MK_LBUTTON = 0x0001;
+            const int MK_RBUTTON = 0x0002;
+
+            if (e.Button == MouseButtons.Right)
+            {
+                //PostMessage(childWindows[childWindows.Count - 1], WM_MOUSEMOVE, (IntPtr)MK_LBUTTON, lParam);
+                for (int click = 0; click < mouseClickAmount; ++click)
+                {
+                    PostMessage(childWindows[childWindows.Count - 1], WM_RBUTTONDOWN, (IntPtr)MK_RBUTTON, lParam);
+                }
+
+            }
+
+            if (e.Button == MouseButtons.Left)
+            {
+                //PostMessage(childWindows[childWindows.Count - 1], WM_MOUSEMOVE, (IntPtr)MK_LBUTTON, lParam);
+                for (int click = 0; click < mouseClickAmount; ++click)
+                {
+                    PostMessage(childWindows[childWindows.Count - 1], WM_LBUTTONDOWN, (IntPtr)MK_LBUTTON, lParam);
+                }
+
+            }
+        }
+
+        private void blowUpMouseUp(object sender, MouseEventArgs e)
+        {
+            Debug.WriteLine("Mouse Up");
+            List<IntPtr> childWindows = GetChildWindows(rsForm.Handle);
+
+            float scaleRatioX = (float)blowUpPictureBox.Width / (float)rsForm.clientBrowser.Width;
+            float scaleRatioY = (float)blowUpPictureBox.Height / (float)rsForm.clientBrowser.Height;
+
+            float mouseScaledX = ((float)e.X / (float)blowUpPictureBox.Width) * rsForm.clientBrowser.Width;
+            float mouseScaledY = ((float)e.Y / (float)blowUpPictureBox.Height) * rsForm.clientBrowser.Height;
+
+            IntPtr lParam = (IntPtr)(((int)(rsForm.Top + mouseScaledY + 31 + mouseYOffset) << 16) | (int)(rsForm.Left + mouseScaledX + 10 + mouseXOffset));
+
+            const int MK_LBUTTON = 0x0001;
+            const int MK_RBUTTON = 0x0002;
+
+            if (e.Button == MouseButtons.Right)
+            {
+                //PostMessage(childWindows[childWindows.Count - 1], WM_MOUSEMOVE, (IntPtr)MK_LBUTTON, lParam);
+                for (int click = 0; click < mouseClickAmount; ++click)
+                {
+                    PostMessage(childWindows[childWindows.Count - 1], WM_RBUTTONUP, IntPtr.Zero, lParam);
+                }
+
+            }
+
+            if (e.Button == MouseButtons.Left)
+            {
+                //PostMessage(childWindows[childWindows.Count - 1], WM_MOUSEMOVE, (IntPtr)MK_LBUTTON, lParam);
+                for (int click = 0; click < mouseClickAmount; ++click)
+                {
+                    PostMessage(childWindows[childWindows.Count - 1], WM_LBUTTONUP, (IntPtr)MK_LBUTTON, lParam);
+                }
+
+            }
         }
     }
 

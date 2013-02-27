@@ -33,22 +33,24 @@
             this.blowUpPictureBox = new System.Windows.Forms.PictureBox();
             this.menuConfig = new System.Windows.Forms.MenuStrip();
             this.calibrateVoidLensesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toggleStretchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.returnFocusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.voidLensesPanel = new System.Windows.Forms.Panel();
-            this.offsetXTrackBar = new System.Windows.Forms.TrackBar();
-            this.label1 = new System.Windows.Forms.Label();
-            this.labelXOffset = new System.Windows.Forms.Label();
-            this.labelYOffset = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.offsetYTrackBar = new System.Windows.Forms.TrackBar();
             this.labelClickAmount = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.mouseClicksTrackBar = new System.Windows.Forms.TrackBar();
+            this.labelYOffset = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.offsetYTrackBar = new System.Windows.Forms.TrackBar();
+            this.labelXOffset = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.offsetXTrackBar = new System.Windows.Forms.TrackBar();
             ((System.ComponentModel.ISupportInitialize)(this.blowUpPictureBox)).BeginInit();
             this.menuConfig.SuspendLayout();
             this.voidLensesPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.offsetXTrackBar)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.offsetYTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.mouseClicksTrackBar)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.offsetYTrackBar)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.offsetXTrackBar)).BeginInit();
             this.SuspendLayout();
             // 
             // timer1
@@ -62,19 +64,23 @@
             this.blowUpPictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.blowUpPictureBox.Location = new System.Drawing.Point(0, 24);
+            this.blowUpPictureBox.Location = new System.Drawing.Point(249, 24);
             this.blowUpPictureBox.Name = "blowUpPictureBox";
-            this.blowUpPictureBox.Size = new System.Drawing.Size(1420, 611);
+            this.blowUpPictureBox.Size = new System.Drawing.Size(928, 611);
             this.blowUpPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.blowUpPictureBox.TabIndex = 3;
             this.blowUpPictureBox.TabStop = false;
             this.blowUpPictureBox.Click += new System.EventHandler(this.gotCLicked);
+            this.blowUpPictureBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.blowUpMouseDown);
             this.blowUpPictureBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.blowUpMouseMove);
+            this.blowUpPictureBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.blowUpMouseUp);
             // 
             // menuConfig
             // 
             this.menuConfig.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.calibrateVoidLensesToolStripMenuItem});
+            this.calibrateVoidLensesToolStripMenuItem,
+            this.toggleStretchToolStripMenuItem,
+            this.returnFocusToolStripMenuItem});
             this.menuConfig.Location = new System.Drawing.Point(0, 0);
             this.menuConfig.Name = "menuConfig";
             this.menuConfig.Size = new System.Drawing.Size(1418, 24);
@@ -87,6 +93,20 @@
             this.calibrateVoidLensesToolStripMenuItem.Size = new System.Drawing.Size(131, 20);
             this.calibrateVoidLensesToolStripMenuItem.Text = "Calibrate Void Lenses";
             this.calibrateVoidLensesToolStripMenuItem.Click += new System.EventHandler(this.calibrateVoidLensesToolStripMenuItem_Click);
+            // 
+            // toggleStretchToolStripMenuItem
+            // 
+            this.toggleStretchToolStripMenuItem.Name = "toggleStretchToolStripMenuItem";
+            this.toggleStretchToolStripMenuItem.Size = new System.Drawing.Size(96, 20);
+            this.toggleStretchToolStripMenuItem.Text = "Toggle Stretch";
+            this.toggleStretchToolStripMenuItem.Click += new System.EventHandler(this.toggleStretchToolStripMenuItem_Click);
+            // 
+            // returnFocusToolStripMenuItem
+            // 
+            this.returnFocusToolStripMenuItem.Name = "returnFocusToolStripMenuItem";
+            this.returnFocusToolStripMenuItem.Size = new System.Drawing.Size(88, 20);
+            this.returnFocusToolStripMenuItem.Text = "Return Focus";
+            this.returnFocusToolStripMenuItem.Click += new System.EventHandler(this.returnFocusToolStripMenuItem_Click);
             // 
             // voidLensesPanel
             // 
@@ -105,64 +125,6 @@
             this.voidLensesPanel.Size = new System.Drawing.Size(330, 154);
             this.voidLensesPanel.TabIndex = 5;
             this.voidLensesPanel.Visible = false;
-            // 
-            // offsetXTrackBar
-            // 
-            this.offsetXTrackBar.Location = new System.Drawing.Point(62, 6);
-            this.offsetXTrackBar.Maximum = 50;
-            this.offsetXTrackBar.Minimum = -50;
-            this.offsetXTrackBar.Name = "offsetXTrackBar";
-            this.offsetXTrackBar.Size = new System.Drawing.Size(265, 45);
-            this.offsetXTrackBar.TabIndex = 0;
-            this.offsetXTrackBar.TickStyle = System.Windows.Forms.TickStyle.Both;
-            this.offsetXTrackBar.Scroll += new System.EventHandler(this.offsetXTrackBar_Scroll);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(10, 11);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(51, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "X Offset: ";
-            // 
-            // labelXOffset
-            // 
-            this.labelXOffset.AutoSize = true;
-            this.labelXOffset.Location = new System.Drawing.Point(25, 28);
-            this.labelXOffset.Name = "labelXOffset";
-            this.labelXOffset.Size = new System.Drawing.Size(13, 13);
-            this.labelXOffset.TabIndex = 2;
-            this.labelXOffset.Text = "0";
-            // 
-            // labelYOffset
-            // 
-            this.labelYOffset.AutoSize = true;
-            this.labelYOffset.Location = new System.Drawing.Point(25, 74);
-            this.labelYOffset.Name = "labelYOffset";
-            this.labelYOffset.Size = new System.Drawing.Size(13, 13);
-            this.labelYOffset.TabIndex = 5;
-            this.labelYOffset.Text = "0";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(10, 57);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(51, 13);
-            this.label3.TabIndex = 4;
-            this.label3.Text = "Y Offset: ";
-            // 
-            // offsetYTrackBar
-            // 
-            this.offsetYTrackBar.Location = new System.Drawing.Point(62, 52);
-            this.offsetYTrackBar.Maximum = 50;
-            this.offsetYTrackBar.Minimum = -50;
-            this.offsetYTrackBar.Name = "offsetYTrackBar";
-            this.offsetYTrackBar.Size = new System.Drawing.Size(265, 45);
-            this.offsetYTrackBar.TabIndex = 3;
-            this.offsetYTrackBar.TickStyle = System.Windows.Forms.TickStyle.Both;
-            this.offsetYTrackBar.Scroll += new System.EventHandler(this.offsetYTrackBar_Scroll);
             // 
             // labelClickAmount
             // 
@@ -194,6 +156,64 @@
             this.mouseClicksTrackBar.Value = 2;
             this.mouseClicksTrackBar.Scroll += new System.EventHandler(this.mouseClicksTrackBar_Scroll);
             // 
+            // labelYOffset
+            // 
+            this.labelYOffset.AutoSize = true;
+            this.labelYOffset.Location = new System.Drawing.Point(25, 74);
+            this.labelYOffset.Name = "labelYOffset";
+            this.labelYOffset.Size = new System.Drawing.Size(13, 13);
+            this.labelYOffset.TabIndex = 5;
+            this.labelYOffset.Text = "0";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(10, 57);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(51, 13);
+            this.label3.TabIndex = 4;
+            this.label3.Text = "Y Offset: ";
+            // 
+            // offsetYTrackBar
+            // 
+            this.offsetYTrackBar.Location = new System.Drawing.Point(62, 52);
+            this.offsetYTrackBar.Maximum = 50;
+            this.offsetYTrackBar.Minimum = -50;
+            this.offsetYTrackBar.Name = "offsetYTrackBar";
+            this.offsetYTrackBar.Size = new System.Drawing.Size(265, 45);
+            this.offsetYTrackBar.TabIndex = 3;
+            this.offsetYTrackBar.TickStyle = System.Windows.Forms.TickStyle.Both;
+            this.offsetYTrackBar.Scroll += new System.EventHandler(this.offsetYTrackBar_Scroll);
+            // 
+            // labelXOffset
+            // 
+            this.labelXOffset.AutoSize = true;
+            this.labelXOffset.Location = new System.Drawing.Point(25, 28);
+            this.labelXOffset.Name = "labelXOffset";
+            this.labelXOffset.Size = new System.Drawing.Size(13, 13);
+            this.labelXOffset.TabIndex = 2;
+            this.labelXOffset.Text = "0";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(10, 11);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(51, 13);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "X Offset: ";
+            // 
+            // offsetXTrackBar
+            // 
+            this.offsetXTrackBar.Location = new System.Drawing.Point(62, 6);
+            this.offsetXTrackBar.Maximum = 50;
+            this.offsetXTrackBar.Minimum = -50;
+            this.offsetXTrackBar.Name = "offsetXTrackBar";
+            this.offsetXTrackBar.Size = new System.Drawing.Size(265, 45);
+            this.offsetXTrackBar.TabIndex = 0;
+            this.offsetXTrackBar.TickStyle = System.Windows.Forms.TickStyle.Both;
+            this.offsetXTrackBar.Scroll += new System.EventHandler(this.offsetXTrackBar_Scroll);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -214,9 +234,9 @@
             this.menuConfig.PerformLayout();
             this.voidLensesPanel.ResumeLayout(false);
             this.voidLensesPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.offsetXTrackBar)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.offsetYTrackBar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.mouseClicksTrackBar)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.offsetYTrackBar)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.offsetXTrackBar)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -238,6 +258,8 @@
         private System.Windows.Forms.Label labelClickAmount;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TrackBar mouseClicksTrackBar;
+        private System.Windows.Forms.ToolStripMenuItem toggleStretchToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem returnFocusToolStripMenuItem;
 
     }
 }
