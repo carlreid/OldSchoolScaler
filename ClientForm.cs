@@ -74,11 +74,18 @@ namespace OldSchoolScaler
 
         private void ClientForm_Load(object sender, EventArgs e)
         {
-            this.Left = 9000;
-            this.Top = 9000;
+            int totalWidth = 0;
+
+            foreach (Screen s in Screen.AllScreens)
+            {
+                totalWidth += s.Bounds.Width;
+            }
+
+            this.Left = totalWidth;
+            //this.Top = 9000;
             //this.ClientSize = new Size(0,0);
 
-            clientBrowser.Navigate("http://oldschool.runescape.com/", null, null, "Old School Scaler\r\n");
+            clientBrowser.Navigate("http://oldschool58.runescape.com/", null, null, "Old School Scaler\r\n");
 
         }
 

@@ -26,6 +26,7 @@ namespace OldSchoolScaler
 
         int lastMousePosX = 0;
         int lastMousePosY = 0;
+        bool isMouseClick = false;
 
         [StructLayout(LayoutKind.Sequential)]
         public struct POINT
@@ -100,13 +101,29 @@ namespace OldSchoolScaler
         const int WM_MOUSEWHEEL = 0x020A;
         const int WM_RBUTTONDOWN = 0x0204;
         const int WM_RBUTTONUP = 0x0205;
+        const int WM_SETCURSOR = 0x0020;
         //const int WM_PARENTNOTIFY = 0x0210;
         //const int WM_MOUSEACTIVATE = 0x0021;
+        const int WM_NCHITTEST = 0x84;
 
 
         public Form1()
         {
             InitializeComponent();
+
+            int maxWorlds = 78;
+            int[] nonExistWorlds = {23, 24, 31, 32, 39, 40, 47, 48, 55, 56, 63, 64, 71, 72};
+            for (int world = 1; world <= maxWorlds; ++world)
+            {
+                foreach (int deadWorld in nonExistWorlds)
+                {
+                    if (world == deadWorld)
+                        continue;
+                }
+                worldComboBox.Items.Add(world.ToString());
+            }
+            //worldComboBox.Visible = false;
+            //loadWorldButton.Visible = false;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -114,6 +131,8 @@ namespace OldSchoolScaler
             rsForm = new ClientForm();
             rsForm.myOwner = this;
             rsForm.Show();
+
+            blowUpPictureBox.Focus();
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -127,18 +146,19 @@ namespace OldSchoolScaler
 
 
 
-            //if (inRightClickDown)
-            //{
-            //    return;
-            //}
-            //List<IntPtr> childWindows = GetChildWindows(rsForm.Handle);
+            //////if (isRightClick)
+            //////{
+            //////    return;
+            //////}
+            ////List<IntPtr> childWindows = GetChildWindows(rsForm.Handle);
 
-            //float scaleRatioX = (float)blowUpPictureBox.Width / (float)rsForm.clientBrowser.Width;
-            //float scaleRatioY = (float)blowUpPictureBox.Height / (float)rsForm.clientBrowser.Height;
+            ////float scaleRatioX = (float)blowUpPictureBox.Width / (float)rsForm.clientBrowser.Width;
+            ////float scaleRatioY = (float)blowUpPictureBox.Height / (float)rsForm.clientBrowser.Height;
 
-            //IntPtr lParam = (IntPtr)(((int)(rsForm.Top + lastMousePosY + 31 + mouseYOffset) << 16) | (int)(rsForm.Left + lastMousePosX + 10 + mouseXOffset));
+            ////IntPtr lParam = (IntPtr)(((int)(rsForm.Top + lastMousePosY + 31 + mouseYOffset) << 16) | (int)(rsForm.Left + lastMousePosX + 10 + mouseXOffset));
 
-            //PostMessage(childWindows[childWindows.Count - 1], WM_MOUSEMOVE, IntPtr.Zero, lParam);
+            //////PostMessage(childWindows[childWindows.Count - 1], WM_MOUSEMOVE, IntPtr.Zero, lParam);
+            //////SendMessage(childWindows[childWindows.Count - 1], WM_NCHITTEST, IntPtr.Zero, lParam);
 
 
         }
@@ -173,6 +193,12 @@ namespace OldSchoolScaler
 
         private void keyPress(object sender, KeyEventArgs e)
         {
+            if (worldComboBox.Focused)
+            {
+                e.Handled = false;
+                return;
+            }
+
             List<IntPtr> childWindows = GetChildWindows(rsForm.Handle);
 
             int curKey = e.KeyValue;
@@ -180,60 +206,64 @@ namespace OldSchoolScaler
             int scanCode = MapVirtualKey(e.KeyCode, 0);
             int lparam = 0x00000001 | (scanCode << 16);
 
+            //SendMessage(childWindows[childWindows.Count - 3], WM_SETFOCUS, (IntPtr)cap, IntPtr.Zero);
+            //PostMessage(childWindows[childWindows.Count - 3], WM_KEYDOWN, ((IntPtr)curKey), (IntPtr)lparam);
+            ////PostMessage(childWindows[childWindows.Count - 3], WM_KEYUP, ((IntPtr)curKey), (IntPtr)lparam);
+
+            //rsForm.clientBrowser.Focus();
+
+
+            //Useful in future (Alt/Control) - http://stackoverflow.com/questions/10280000/how-to-create-lparam-of-sendmessage-wm-keydown
             SendMessage(childWindows[childWindows.Count - 3], WM_SETFOCUS, (IntPtr)cap, IntPtr.Zero);
             PostMessage(childWindows[childWindows.Count - 3], WM_KEYDOWN, ((IntPtr)curKey), (IntPtr)lparam);
-            //PostMessage(childWindows[childWindows.Count - 3], WM_KEYUP, ((IntPtr)curKey), (IntPtr)lparam);
 
-            this.Focus();
+            //////Debug.WriteLine("Key Down: " + e.KeyValue);
+
+            //e.Handled = true;
+            //e.SuppressKeyPress = true;
         }
 
-
-        private void gotCLicked(object sender, EventArgs e)
+        private void keyPressUp(object sender, KeyEventArgs e)
         {
-            //MouseEventArgs me = e as MouseEventArgs;
+            if (worldComboBox.Focused)
+            {
+                e.Handled = false;
+                return;
+            }
 
-            //List<IntPtr> childWindows = GetChildWindows(rsForm.Handle);
+            //////////////List<IntPtr> childWindows = GetChildWindows(rsForm.Handle);
+            //////////////Debug.WriteLine("Key Up: " + e.KeyValue);
+            //////////////int curKey = e.KeyValue;
 
-            ////IntPtr lParam = (IntPtr)((826 << 16) | 1171); //Hard Coded to mute RS
+            //////////////int scanCode = MapVirtualKey(e.KeyCode, 0);
+            //////////////int lparam = 0x00000001 | (scanCode << 16) | (1 << 30) | (1 << 31);
 
-            //float scaleRatioX = (float)blowUpPictureBox.Width / (float)rsForm.clientBrowser.Width;
-            //float scaleRatioY = (float)blowUpPictureBox.Height / (float)rsForm.clientBrowser.Height;
+            ////////////////SendMessage(childWindows[childWindows.Count - 3], WM_SETFOCUS, (IntPtr)cap, IntPtr.Zero);
+            ////////////////PostMessage(childWindows[childWindows.Count - 3], WM_KEYDOWN, ((IntPtr)curKey), (IntPtr)lparam);
+            //////////////////PostMessage(childWindows[childWindows.Count - 3], WM_KEYUP, ((IntPtr)curKey), (IntPtr)lparam);
 
-            //float mouseScaledX = ((float)me.X / (float)blowUpPictureBox.Width) * rsForm.clientBrowser.Width;
-            //float mouseScaledY = ((float)me.Y / (float)blowUpPictureBox.Height) * rsForm.clientBrowser.Height;
+            ////////////////rsForm.clientBrowser.Focus();
 
-            //IntPtr lParam = (IntPtr)(((int)(rsForm.Top + mouseScaledY + 31 + mouseYOffset) << 16) | (int)(rsForm.Left + mouseScaledX + 10 + mouseXOffset));
 
-            //const int MK_LBUTTON = 0x0001;
-            //const int MK_RBUTTON = 0x0002;
 
-            //if (me.Button == MouseButtons.Right)
-            //{
-            //    //PostMessage(childWindows[childWindows.Count - 1], WM_MOUSEMOVE, (IntPtr)MK_LBUTTON, lParam);
-            //    for (int click = 0; click < mouseClickAmount; ++click)
-            //    {
-            //        PostMessage(childWindows[childWindows.Count - 1], WM_RBUTTONDOWN, (IntPtr)MK_RBUTTON, lParam);
-            //        PostMessage(childWindows[childWindows.Count - 1], WM_RBUTTONUP, IntPtr.Zero, lParam);
-            //    }
-                
-            //}
+            ////////////////PostMessage(childWindows[childWindows.Count - 3], WM_KEYDOWN, ((IntPtr)curKey), (IntPtr)lparam);
+            ////////////////PostMessage(childWindows[childWindows.Count - 3], WM_CHAR, ((IntPtr)e.KeyCode), (IntPtr)lparam);
+            //////////////SendMessage(childWindows[childWindows.Count - 3], WM_SETFOCUS, (IntPtr)cap, IntPtr.Zero);
+            //////////////PostMessage(childWindows[childWindows.Count - 3], WM_KEYUP, ((IntPtr)curKey), (IntPtr)lparam);
+            //////////////blowUpPictureBox.Focus();
 
-            //if (me.Button == MouseButtons.Left)
-            //{
-            //    //PostMessage(childWindows[childWindows.Count - 1], WM_MOUSEMOVE, (IntPtr)MK_LBUTTON, lParam);
-            //    for (int click = 0; click < mouseClickAmount; ++click)
-            //    {
-            //        PostMessage(childWindows[childWindows.Count - 1], WM_LBUTTONDOWN, (IntPtr)MK_LBUTTON, lParam);
-            //        PostMessage(childWindows[childWindows.Count - 1], WM_LBUTTONUP, IntPtr.Zero, lParam);
-            //    }
-                
-            //}
 
+            //////////////e.Handled = true;
+            //////////////e.SuppressKeyPress = true;
         }
-
 
         private void blowUpMouseMove(object sender, MouseEventArgs e)
         {
+
+            if (isMouseClick)
+            {
+                return;
+            }
 
             if (e.Button == MouseButtons.Right)
             {
@@ -249,13 +279,19 @@ namespace OldSchoolScaler
             float mouseScaledX = ((float)e.X / (float)blowUpPictureBox.Width) * rsForm.clientBrowser.Width;
             float mouseScaledY = ((float)e.Y / (float)blowUpPictureBox.Height) * rsForm.clientBrowser.Height;
 
+            const int HTCLIENT = 1;
+
             IntPtr lParam = (IntPtr)(((int)(rsForm.Top + mouseScaledY + 31 + mouseYOffset) << 16) | (int)(rsForm.Left + mouseScaledX + 10 + mouseXOffset));
 
+            IntPtr lParamHittest = (IntPtr)(((int)WM_MOUSEMOVE << 16) | HTCLIENT);
+
+            SendMessage(childWindows[childWindows.Count - 1], WM_SETCURSOR, childWindows[childWindows.Count - 1], (IntPtr)lParamHittest);
             PostMessage(childWindows[childWindows.Count - 1], WM_MOUSEMOVE, IntPtr.Zero, lParam);
+            SendMessage(childWindows[childWindows.Count - 1], WM_NCHITTEST, IntPtr.Zero, lParam);
 
             lastMousePosX = (int)mouseScaledX;
             lastMousePosY = (int)mouseScaledY;
-
+            //blowUpPictureBox.Focus();
         }
 
         private void calibrateVoidLensesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -335,6 +371,8 @@ namespace OldSchoolScaler
             const int MK_LBUTTON = 0x0001;
             const int MK_RBUTTON = 0x0002;
 
+            isMouseClick = true;
+
             if (e.Button == MouseButtons.Right)
             {
                 //PostMessage(childWindows[childWindows.Count - 1], WM_MOUSEMOVE, (IntPtr)MK_LBUTTON, lParam);
@@ -354,6 +392,7 @@ namespace OldSchoolScaler
                 }
 
             }
+            //blowUpPictureBox.Focus();
         }
 
         private void blowUpMouseUp(object sender, MouseEventArgs e)
@@ -371,6 +410,8 @@ namespace OldSchoolScaler
 
             const int MK_LBUTTON = 0x0001;
             const int MK_RBUTTON = 0x0002;
+
+            isMouseClick = false;
 
             if (e.Button == MouseButtons.Right)
             {
@@ -391,7 +432,23 @@ namespace OldSchoolScaler
                 }
 
             }
+            //blowUpPictureBox.Focus();
         }
+
+        private void loadWorldButton_Click(object sender, EventArgs e)
+        {
+            int selectedWorld;
+            if (Int32.TryParse(worldComboBox.Text, out selectedWorld))
+            {
+                rsForm.clientBrowser.Navigate("http://oldschool" + selectedWorld.ToString() + ".runescape.com/j1", null, null, "Old School Scaler\r\n");
+            }
+            else
+            {
+                MessageBox.Show("Please enter a number.", "Invalid World", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+
     }
 
 

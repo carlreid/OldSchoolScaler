@@ -45,6 +45,8 @@
             this.labelXOffset = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.offsetXTrackBar = new System.Windows.Forms.TrackBar();
+            this.worldComboBox = new System.Windows.Forms.ComboBox();
+            this.loadWorldButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.blowUpPictureBox)).BeginInit();
             this.menuConfig.SuspendLayout();
             this.voidLensesPanel.SuspendLayout();
@@ -70,7 +72,6 @@
             this.blowUpPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.blowUpPictureBox.TabIndex = 3;
             this.blowUpPictureBox.TabStop = false;
-            this.blowUpPictureBox.Click += new System.EventHandler(this.gotCLicked);
             this.blowUpPictureBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.blowUpMouseDown);
             this.blowUpPictureBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.blowUpMouseMove);
             this.blowUpPictureBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.blowUpMouseUp);
@@ -153,7 +154,7 @@
             this.mouseClicksTrackBar.Size = new System.Drawing.Size(265, 45);
             this.mouseClicksTrackBar.TabIndex = 6;
             this.mouseClicksTrackBar.TickStyle = System.Windows.Forms.TickStyle.Both;
-            this.mouseClicksTrackBar.Value = 2;
+            this.mouseClicksTrackBar.Value = 1;
             this.mouseClicksTrackBar.Scroll += new System.EventHandler(this.mouseClicksTrackBar_Scroll);
             // 
             // labelYOffset
@@ -214,21 +215,45 @@
             this.offsetXTrackBar.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.offsetXTrackBar.Scroll += new System.EventHandler(this.offsetXTrackBar_Scroll);
             // 
+            // worldComboBox
+            // 
+            this.worldComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.worldComboBox.FormattingEnabled = true;
+            this.worldComboBox.Location = new System.Drawing.Point(1292, 2);
+            this.worldComboBox.Name = "worldComboBox";
+            this.worldComboBox.Size = new System.Drawing.Size(45, 21);
+            this.worldComboBox.TabIndex = 6;
+            // 
+            // loadWorldButton
+            // 
+            this.loadWorldButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.loadWorldButton.Location = new System.Drawing.Point(1341, 0);
+            this.loadWorldButton.Name = "loadWorldButton";
+            this.loadWorldButton.Size = new System.Drawing.Size(75, 23);
+            this.loadWorldButton.TabIndex = 7;
+            this.loadWorldButton.Text = "Load World";
+            this.loadWorldButton.UseVisualStyleBackColor = true;
+            this.loadWorldButton.Click += new System.EventHandler(this.loadWorldButton_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(1418, 631);
+            this.Controls.Add(this.loadWorldButton);
+            this.Controls.Add(this.worldComboBox);
             this.Controls.Add(this.voidLensesPanel);
             this.Controls.Add(this.blowUpPictureBox);
             this.Controls.Add(this.menuConfig);
+            this.KeyPreview = true;
             this.MainMenuStrip = this.menuConfig;
             this.Name = "Form1";
             this.Text = "Old School Scaler";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.Form1_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.keyPress);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.keyPressUp);
             ((System.ComponentModel.ISupportInitialize)(this.blowUpPictureBox)).EndInit();
             this.menuConfig.ResumeLayout(false);
             this.menuConfig.PerformLayout();
@@ -260,6 +285,8 @@
         private System.Windows.Forms.TrackBar mouseClicksTrackBar;
         private System.Windows.Forms.ToolStripMenuItem toggleStretchToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem returnFocusToolStripMenuItem;
+        private System.Windows.Forms.ComboBox worldComboBox;
+        private System.Windows.Forms.Button loadWorldButton;
 
     }
 }
