@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ClientForm));
             this.clientBrowser = new System.Windows.Forms.WebBrowser();
             this.SuspendLayout();
             // 
@@ -48,6 +49,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(785, 536);
             this.Controls.Add(this.clientBrowser);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximumSize = new System.Drawing.Size(801, 575);
+            this.MinimumSize = new System.Drawing.Size(801, 575);
             this.Name = "ClientForm";
             this.Text = "Client Window";
             this.Activated += new System.EventHandler(this.gotFocus);
